@@ -10,17 +10,17 @@ export class UserController {
         private readonly userService: UserService
     ) {}
 
-    @Get('users')
+    @Get()
     getAll() {
         return this.userService.getAll()
     }
 
-    @Get('users/:userId')
+    @Get(':userId')
     getOne(@Param('userId') userId: string) {
         return this.userService.getOne(userId)
     }
 
-    @Post('users')
+    @Post()
     createUser(@Body() user: UserEntity) {
         return this.userService.saveUser(user)
     }
