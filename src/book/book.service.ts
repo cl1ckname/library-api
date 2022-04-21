@@ -10,15 +10,15 @@ export class BookService {
         private readonly bookRepository: Repository<BookEntity>
     ) {}
 
-    create(book: BookEntity) {
+    create(book: BookEntity): Promise<BookEntity> {
         return this.bookRepository.save(book)
     }
 
-    getOne(bookId: string) {
+    getOne(bookId: string): Promise<BookEntity> {
         return this.bookRepository.findOne({where: {bookId}, relations: ['rent']})
     }
 
-    getAll() {
+    getAll(): Promise<BookEntity[]> {
         return this.bookRepository.find({relations: ['rent']})
     }
     

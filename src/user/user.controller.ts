@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UserEntity } from "./user.entity";
 import { UserService } from "./user.service";
@@ -18,6 +18,11 @@ export class UserController {
     @Get(':userId')
     getOne(@Param('userId') userId: string) {
         return this.userService.getOne(userId)
+    }
+
+    @Put(':userId')
+    updateUser(@Param('userId') userId: string, @Body() user: UserEntity) {
+        return this.userService.updateUser(userId, user)
     }
 
     @Post()

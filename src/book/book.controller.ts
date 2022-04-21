@@ -4,7 +4,7 @@ import { BookEntity } from "./book.entity";
 import { BookService } from "./book.service";
 
 
-@ApiTags('book')
+@ApiTags('Book')
 @Controller('api/book')
 export class BookController {
     constructor(

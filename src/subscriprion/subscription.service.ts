@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserService } from "../user/user.service";
 import { Repository } from "typeorm";
 import { SubscriptionEntity } from "./subscription.entity";
+import { UserEntity } from "src/user/user.entity";
 
 @Injectable()
 export class SubscriptionService {
@@ -12,14 +13,14 @@ export class SubscriptionService {
         private readonly userService: UserService
     ) {}
 
-    async subscribe(userId: string) {
+    async subscribe(userId: string): Promise<UserEntity> {
         const user = await this.userService.getOne(userId)
-        if (user.subscription && user.subscription.expirationDate > new Date())
+        if (user?.subscription?.expirationDate > new Date())
             throw new HttpException('You are already have subscription!', 403)
         
-            const sub = new SubscriptionEntity()
+        const sub = new SubscriptionEntity()
         sub.expirationDate = new Date()
-        sub.expirationDate.setFullYear(sub.expirationDate.getFullYear() + 1)
+        sub.expirationDate.setFullYear(sub.expirationDate.getFullYear() + 1) // subscription period - one year
         user.subscription = await this.subscriptionRepository.save(sub)
         return this.userService.saveUser(user)
     }

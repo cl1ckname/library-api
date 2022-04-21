@@ -11,18 +11,23 @@ export class UserService {
         private readonly userRepository: Repository<UserEntity>
     ) {}
 
-    getAll() {
+    getAll(): Promise<UserEntity[]> {
         return this.userRepository.find({relations: ['subscription', 'rents']})
     }
 
-    getOne(userId: string) {
+    getOne(userId: string): Promise<UserEntity> {
         return this.userRepository.findOne({where: {userId: userId}, relations: ['subscription', 'rents']})
     }
 
-    saveUser(user: Partial<UserEntity>) {
+    saveUser(user: UserEntity): Promise<UserEntity> {
         return this.userRepository.save(user)
     }
 
+    async updateUser(userId: string, user: UserEntity): Promise<UserEntity> {
+        let userToUpdate = await this.userRepository.findOne({where: {userId}})
+        userToUpdate = Object.assign(userToUpdate, user)
+        return this.userRepository.save(userToUpdate)
+    }
 
 
     
