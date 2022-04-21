@@ -15,11 +15,11 @@ export class BookService {
     }
 
     getOne(bookId: string) {
-        return this.bookRepository.findOne({where: {bookId}})
+        return this.bookRepository.findOne({where: {bookId}, relations: ['rent']})
     }
 
     getAll() {
-        return this.bookRepository.find()
+        return this.bookRepository.find({relations: ['rent']})
     }
     
 }

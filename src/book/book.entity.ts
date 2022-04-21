@@ -1,5 +1,6 @@
 import { ApiProperty, ApiResponseProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { RentEntity } from "src/rent/rent.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('book')
 export class BookEntity {
@@ -11,4 +12,8 @@ export class BookEntity {
     @ApiProperty()
     @Column('varchar')
     title: string
+
+    @OneToOne(() => RentEntity)
+    @JoinColumn({name: 'bookId'})
+    rent?: RentEntity
 }

@@ -12,11 +12,11 @@ export class UserService {
     ) {}
 
     getAll() {
-        return this.userRepository.find({relations: ['subscription']})
+        return this.userRepository.find({relations: ['subscription', 'rents']})
     }
 
     getOne(userId: string) {
-        return this.userRepository.findOne({where: {userId: userId}, relations: ['subscription']})
+        return this.userRepository.findOne({where: {userId: userId}, relations: ['subscription', 'rents']})
     }
 
     saveUser(user: Partial<UserEntity>) {
