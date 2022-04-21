@@ -9,7 +9,7 @@ export class SubscriptionController {
         private readonly subscriptionService: SubscriptionService
     ) {}
 
-    @Post('subscription/:userId')
+    @Post(':userId')
     create(@Param('userId') userId: string) {
         return this.subscriptionService.subscribe(userId)
     }

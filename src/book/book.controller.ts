@@ -11,7 +11,7 @@ export class BookController {
         private readonly bookService: BookService
     ) {}
 
-    @Post('create')
+    @Post()
     create(@Body() book: BookEntity) {
         return this.bookService.create(book)
     }
