@@ -1,27 +1,29 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserService } from "../user/user.service";
 import { Repository } from "typeorm";
-import { SubscriptionEntity } from "./subscription.entity";
+import { Subscription } from "./subscription.entity";
 import { UserEntity } from "src/user/user.entity";
+import { UserGetDto } from "src/user/dto/userGet.dto";
 
 @Injectable()
 export class SubscriptionService {
     constructor (
-        @InjectRepository(SubscriptionEntity)
-        private readonly subscriptionRepository: Repository<SubscriptionEntity>,
-        private readonly userService: UserService
+        @InjectRepository(Subscription)
+        private readonly subscriptionRepository: Repository<Subscription>,
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>
     ) {}
 
-    async subscribe(userId: string): Promise<UserEntity> {
-        const user = await this.userService.getOne(userId)
+    async subscribe(userId: string): Promise<UserGetDto> {
+        const userDto = await this.userRepository.findOne({where: {userId}})
+        const user = UserEntity.fromDto(userDto)
         if (user?.subscription?.expirationDate > new Date())
-            throw new HttpException('You are already have subscription!', 403)
+            throw new HttpException('You are already have subscription!', 400)
         
-        const sub = new SubscriptionEntity()
+        const sub = new Subscription()
         sub.expirationDate = new Date()
         sub.expirationDate.setFullYear(sub.expirationDate.getFullYear() + 1) // subscription period - one year
         user.subscription = await this.subscriptionRepository.save(sub)
-        return this.userService.saveUser(user)
+        return this.userRepository.save(user).then(u => u.toDto())
     }
 }

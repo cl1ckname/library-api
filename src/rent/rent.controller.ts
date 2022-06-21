@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Param, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { RentPostDto } from "./dto/rentPost.dto";
 import { RentEntity } from "./rent.entity";
 import { RentService } from "./rent.service";
 
@@ -11,7 +12,7 @@ export class RentController {
     ) {}
 
     @Post()
-    create(@Body() rent: RentEntity) {
+    create(@Body() rent: RentPostDto) {
         return this.rentService.create(rent)
     }
 

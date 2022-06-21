@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { UserPostDto } from "./dto/userPost.dto";
+import { UserPutDto } from "./dto/userPut.dto";
 import { UserEntity } from "./user.entity";
 import { UserService } from "./user.service";
 
@@ -21,12 +23,12 @@ export class UserController {
     }
 
     @Put(':userId')
-    updateUser(@Param('userId') userId: string, @Body() user: UserEntity) {
+    updateUser(@Param('userId') userId: string, @Body() user: UserPutDto) {
         return this.userService.updateUser(userId, user)
     }
 
     @Post()
-    createUser(@Body() user: UserEntity) {
+    createUser(@Body() user: UserPostDto) {
         return this.userService.saveUser(user)
     }
 }
