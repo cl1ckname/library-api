@@ -32,11 +32,20 @@ Implementation of API for managing the rental of books in the library and user s
 foo-bar# docker-compose up -d
 ```
 2. Create ormconfig file with you database credentials, install typeorm-cli and run migration or use your db client
-3. Run in terminal 
+3. Create `.env` file in root of project with the following content
+```
+host = {database host (default 'localhost')}
+port = {database port (default '5432')}
+username = {database user's name (default 'library')}
+password = {database user's password (default 'library')}
+database = {database name (default 'libraryV')}
+```
+4. Run in terminal 
 ```console
 foo-bar# yarn install
 ```
-4. Start application
+5. Start application
 ```console
-foo-bar# yarn start:dev
+foo-bar# yarn start
 ```
+6. Now you can open the api page at `localhost:3000/api`
