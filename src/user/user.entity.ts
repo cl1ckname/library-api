@@ -5,8 +5,10 @@ import { BookEntity } from "src/book/book.entity";
 import { UserPostDto } from "./dto/userPost.dto";
 import { UserPutDto } from "./dto/userPut.dto";
 import { UserGetDto } from "./dto/userGet.dto";
+import { BookService } from "src/book/book.service";
+import { domainToUnicode } from "url";
 
-type CUDto = UserPostDto | UserPutDto
+export type CUDto = UserPostDto | UserPutDto
 
 @Entity({name: 'user'})
 export class UserEntity {
@@ -17,7 +19,7 @@ export class UserEntity {
     @Column('varchar')
     username: string
 
-    @OneToOne(() => Subscription)
+    @OneToOne(() => Subscription, {cascade: true})
     @JoinColumn({name: 'subscriptionId'})
     subscription?: Subscription
 
@@ -27,17 +29,19 @@ export class UserEntity {
 
     books: BookEntity[]
 
-    constructor(username: string) {
-        this.username = username
+    constructor(dto: Partial<UserEntity>) {
+        Object.assign(this, dto)
     }
 
-    public static fromDto(dto: CUDto): UserEntity {
-        return new UserEntity(dto.username)
+    public static fromDto(dto: CUDto | UserGetDto): UserEntity {
+        if (dto instanceof UserGetDto)
+            delete dto.books
+        return new UserEntity(dto as Omit<UserGetDto, 'books'>)
     }
 
     public toDto(): UserGetDto {
         const user = Object.assign({}, this)
         delete user.rents
-        return user
+        return new UserGetDto(user)
     }
 }

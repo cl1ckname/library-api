@@ -26,7 +26,7 @@ export class AppModule {
 						password: config.password,
 						database: config.database,
 						synchronize: false,
-						entities: [UserEntity, Subscription, BookEntity, RentEntity]
+						entities: [UserEntity, Subscription, BookEntity, RentEntity],
 					}
 				),
 				UserModule,

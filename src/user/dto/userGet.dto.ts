@@ -14,5 +14,9 @@ export class UserGetDto {
     subscription?: Subscription
 
     @ApiResponseProperty()
-    books: BookGetDto[]
+    books?: BookGetDto[]
+
+    constructor(o: Partial<UserGetDto>) {
+        Object.assign(this, o)
+    }
 }

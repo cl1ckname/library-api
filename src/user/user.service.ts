@@ -5,25 +5,24 @@ import { Repository } from "typeorm";
 import { UserGetDto } from "./dto/userGet.dto";
 import { UserPostDto } from "./dto/userPost.dto";
 import { UserPutDto } from "./dto/userPut.dto";
-import { UserEntity } from "./user.entity";
+import { UserRepository } from "./user.repository";
 
 
 @Injectable()
 export class UserService {
     constructor (
-        @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>,
         @InjectRepository(BookEntity)
-        private readonly bookRepository: Repository<BookEntity>
+        private readonly bookRepository: Repository<BookEntity>,
+        private readonly userRepository: UserRepository
     ) {}
 
     async getAll(): Promise<UserGetDto[]> {
-        const users = await this.userRepository.find({relations: ['subscription', 'rents']})
+        const users = await this.userRepository.getAll()
         return users.map(u => u.toDto())
     }
 
     async getOne(userId: string): Promise<UserGetDto> {
-        const user = await this.userRepository.findOne({where: {userId: userId}, relations: ['subscription', 'rents']})
+        const user = await this.userRepository.getOne(userId)
         if (!user)
             throw new HttpException(`User with id "${userId} not found"`, 404)
 
@@ -35,14 +34,13 @@ export class UserService {
     }
 
     async saveUser(user: UserPostDto): Promise<UserGetDto> {
-        const userEntity = UserEntity.fromDto(user)
-        return this.userRepository.save(userEntity).then(user => user.toDto())
+        const savedUser = await this.userRepository.save(user)
+        return this.getOne(savedUser.userId)
     }
 
     async updateUser(userId: string, user: UserPutDto): Promise<UserGetDto> {
-        const userEntity = UserEntity.fromDto(user)
-        let userToUpdate = await this.userRepository.findOne({where: {userId}})
-        userToUpdate = Object.assign(userToUpdate, userEntity)
+        let userToUpdate = await this.userRepository.getOne(userId)
+        userToUpdate = Object.assign(userToUpdate, user)
         return this.userRepository.save(userToUpdate).then(u => u.toDto())
     }
 

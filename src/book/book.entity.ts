@@ -1,5 +1,6 @@
 import { RentEntity } from "src/rent/rent.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { UserEntity } from "src/user/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BookGetDto } from "./dto/bookGet.dto";
 import { BookPostDto } from "./dto/bookPost.dto";
 
